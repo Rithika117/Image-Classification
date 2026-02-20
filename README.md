@@ -5,39 +5,75 @@
 To Develop a convolutional deep neural network for image classification and to verify the response for new images.
 
 ## Problem Statement and Dataset
+Image classification is the task of assigning a label to an input image from a predefined set of categories.
 
-Include the Problem Statement and Dataset.
+In this experiment, a CNN model is developed using PyTorch to classify grayscale fashion product images into 10 categories using the Fashion-MNIST dataset.
+
+## Dataset Details:
+
+Dataset Name: Fashion-MNIST
+
+Total Training Images: 60,000
+
+Total Test Images: 10,000
+
+Image Size: 28 × 28 pixels
+
+Number of Classes: 10
+
+## Classes:
+
+T-shirt/top,Trouser,Pullover,Dress,Coat,Sandal,Shirt,Sneaker,Bag,Ankle boot
 
 ## Neural Network Model
 
-Include the neural network model diagram.
+<img width="1347" height="490" alt="image" src="https://github.com/user-attachments/assets/1c3e3ef2-9665-42f5-b8ef-f55f6e4254e8" />
+
 
 ## DESIGN STEPS
+## STEP 1:
 
-### STEP 1:
-Write your own steps
+Load and preprocess the Fashion-MNIST dataset. Apply transformations such as tensor conversion and normalization.
 
-### STEP 2:
+## STEP 2:
 
-### STEP 3:
+Design the CNN architecture using convolutional, pooling, activation, and fully connected layers.
 
+## STEP 3:
+
+Train the model using CrossEntropy loss and Adam optimizer. Evaluate the model using accuracy, confusion matrix, and classification report.
 
 ## PROGRAM
 
-### Name:
-### Register Number:
+### Name:RITHIKA K
+### Register Number:212224230230
 ```python
 class CNNClassifier(nn.Module):
     def __init__(self):
         super(CNNClassifier, self).__init__()
-        # write your code here
 
+        self.conv1 = nn.Conv2d(1, 32, 3, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
 
+        self.pool = nn.MaxPool2d(2, 2)
+        self.relu = nn.ReLU()
 
+        self.fc1 = nn.Linear(64 * 7 * 7, 128)
+        self.fc2 = nn.Linear(128, 10)
 
+        self.dropout = nn.Dropout(0.25)
 
     def forward(self, x):
-        # write your code here
+
+        x = self.pool(self.relu(self.conv1(x)))
+        x = self.pool(self.relu(self.conv2(x)))
+
+        x = x.view(x.size(0), -1)
+
+        x = self.dropout(self.relu(self.fc1(x)))
+        x = self.fc2(x)
+
+        return x
 
 
 
@@ -45,9 +81,11 @@ class CNNClassifier(nn.Module):
 
 ```python
 # Initialize the Model, Loss Function, and Optimizer
-model =
-criterion =
-optimizer =
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+model = CNNClassifier().to(device)
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
 
 ```
 
@@ -55,34 +93,49 @@ optimizer =
 # Train the Model
 def train_model(model, train_loader, num_epochs=3):
 
-    # write your code here
+    model.train()
 
-        
-        
-        
-        print('Name:        ')
-        print('Register Number:       ')
+    for epoch in range(num_epochs):
+
+        running_loss = 0.0
+
+        for images, labels in train_loader:
+
+            images, labels = images.to(device), labels.to(device)
+
+            optimizer.zero_grad()
+
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+
+            loss.backward()
+            optimizer.step()
+
+            running_loss += loss.item()
+
+        print('Name: Rithika K')
+        print('Register Number: 212224230230')
         print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {running_loss/len(train_loader):.4f}')
-
 ```
 
 ## OUTPUT
 ### Training Loss per Epoch
 
-Include the Training Loss per epoch
+<img width="610" height="312" alt="image" src="https://github.com/user-attachments/assets/7bb9b91e-56df-492e-8145-235676302ab3" />
+
 
 ### Confusion Matrix
+<img width="736" height="550" alt="image" src="https://github.com/user-attachments/assets/a3092187-d42c-4d32-a765-25eab1324e8b" />
 
-Include confusion matrix here
 
 ### Classification Report
+<img width="692" height="425" alt="image" src="https://github.com/user-attachments/assets/5fe8d581-fb4c-47b4-8a95-bb6df8d12353" />
 
-Include Classification Report here
 
 
 ### New Sample Data Prediction
+<img width="814" height="738" alt="image" src="https://github.com/user-attachments/assets/228324b6-77f1-462c-bb43-0be200d81f51" />
 
-Include your sample input and output 
 
 ## RESULT
-Include your result here.
+Thus, a Convolutional Deep Neural Network was successfully implemented using the Fashion-MNIST dataset. The model achieved good classification accuracy and was able to correctly classify new sample images.
